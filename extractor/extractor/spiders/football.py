@@ -7,30 +7,29 @@ from ..items import MatchItem
 
 class FootballSpider(scrapy.Spider):
     name = 'football'
-    # allowed_domains = ['fff.fr']
-    # start_urls = ['http://districtfoot85.fff.fr/competitions']
-    start_urls = ['https://districtfoot85.fff.fr/competitions/?competition_id=385358&poule=1&match_id=23722071']
+    allowed_domains = ['fff.fr']
+    start_urls = ['http://districtfoot85.fff.fr/competitions']
 
-    # def parse(self, response):
+    def parse(self, response):
         
-    #     # recovery of data of the various championships
-    #     data_json_string = response.css('#championnat-data::text').get()  # TODO: même chose avec #coupe-data
-    #     championships = json.loads(data_json_string)
+        # recovery of data of the various championships
+        data_json_string = response.css('#championnat-data::text').get()  # TODO: même chose avec #coupe-data
+        championships = json.loads(data_json_string)
 
 
-    #     for championship in championships:
-    #         championship_id = championship.get('id')
-    #         championship_name = championship.get('name')
-    #         if championship_id is None or championship_name is None:
-    #             logging.warning(championship)
-    #         for stage in championship['stages']:
-    #             stage_id = stage['number']
-    #             for group in stage['groups']:
-    #                 group_id = group['number']
-    #                 yield scrapy.Request(
-    #                     f'https://districtfoot85.fff.fr/competitions/?id={championship_id}&poule={group_id}&phase={stage_id}&type=ch&tab=calendar',
-    #                     self.parse_calendar
-    #                 )
+        for championship in championships:
+            championship_id = championship.get('id')
+            championship_name = championship.get('name')
+            if championship_id is None or championship_name is None:
+                logging.warning(championship)
+            for stage in championship['stages']:
+                stage_id = stage['number']
+                for group in stage['groups']:
+                    group_id = group['number']
+                    yield scrapy.Request(
+                        f'https://districtfoot85.fff.fr/competitions/?id={championship_id}&poule={group_id}&phase={stage_id}&type=ch&tab=calendar',
+                        self.parse_calendar
+                    )
 
     def parse_calendar(self, response):
         # scrapy.shell.inspect_response(response, self)
