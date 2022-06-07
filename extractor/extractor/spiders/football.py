@@ -48,7 +48,7 @@ class FootballSpider(scrapy.Spider):
                     self.parse_confrontation
                 )
 
-    def parse(self, response):
+    def parse_confrontation(self, response):
         # TODO: le match a-t-il été joué ?
 
         journey = response.css('span.day::text').get().strip()
