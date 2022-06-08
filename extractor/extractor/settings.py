@@ -64,6 +64,7 @@ ROBOTSTXT_OBEY = False
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'extractor.pipelines.score.ScorePipeline': 100,
+   'extractor.pipelines.date.DatePipeline': 101,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

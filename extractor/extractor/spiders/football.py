@@ -16,7 +16,6 @@ class FootballSpider(scrapy.Spider):
         data_json_string = response.css('#championnat-data::text').get()  # TODO: même chose avec #coupe-data
         championships = json.loads(data_json_string)
 
-
         for championship in championships:
             championship_id = championship.get('id')
             championship_name = championship.get('name')
@@ -32,7 +31,6 @@ class FootballSpider(scrapy.Spider):
                     )
 
     def parse_calendar(self, response):
-        # scrapy.shell.inspect_response(response, self)
         championship_name = response.css('h1::text').get()
 
         # TODO: les 2 champs suivants sont extraits en majuscules
