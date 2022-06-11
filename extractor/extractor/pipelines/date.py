@@ -38,4 +38,7 @@ class DatePipeline:
         return date
 
     def get_time_object(self, date):
+        if re.search(r'^\d+\s+\d+\s+\d+$', date):
+            # sometimes, the hour is not indicated
+            return time.strptime(date, "%d %m %Y")
         return time.strptime(date, "%d %m %Y - %HH%M")
