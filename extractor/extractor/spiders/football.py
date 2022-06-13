@@ -13,6 +13,10 @@ class FootballSpider(scrapy.Spider):
     def parse(self, response):
         subdomains = response.css('#coordonnees a::attr(href)').getall()
         for subdomain in subdomains:
+            # on the FFF's website, only one subdomain (lfpl) has this redirection error
+            if not 'competition' in subdomain:
+                subdomain = response.urljoin('/competitions')
+            
             yield scrapy.Request(subdomain, self.parse_subdomain)
 
     def parse_subdomain(self, response):
@@ -53,6 +57,9 @@ class FootballSpider(scrapy.Spider):
 
         confrontations = response.css('#agenda .results-content')
         for confrontation in confrontations:
+            if not confrontation.css('.equipe1'):
+                # ignore empty (useless) div
+                continue
             team_a_name = confrontation.css('.equipe1 .name::text').get().strip()
             team_b_name = confrontation.css('.equipe2 .name::text').get().strip()
             confrontation_url = confrontation.css('a::attr(href)').get()
@@ -85,6 +92,9 @@ class FootballSpider(scrapy.Spider):
         for journey in journeys:
             confrontations = journey.css('.result-display')
             for confrontation in confrontations:
+                if not confrontation.css('.equipe1'):
+                    # ignore empty (useless) div
+                    continue
                 team_a_name = confrontation.css('.equipe1 .name::text').get().strip()
                 team_b_name = confrontation.css('.equipe2 .name::text').get().strip()
                 confrontation_url = confrontation.css('a::attr(href)').get()
